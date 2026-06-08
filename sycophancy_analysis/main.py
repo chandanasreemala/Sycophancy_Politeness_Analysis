@@ -22,7 +22,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--output-dir",
-        default="truthfulqa_experiment/results",
+        default="sycophancy_analysis/results",
         help="Directory used to store generated CSVs and summaries.",
     )
     parser.add_argument(

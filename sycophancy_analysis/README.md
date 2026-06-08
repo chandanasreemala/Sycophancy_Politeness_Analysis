@@ -14,10 +14,10 @@ What it does:
 From the repository root:
 
 ```bash
-python -m truthfulqa_experiment.main \
+python -m sycophancy_analysis.main \
   --input-models google/gemma-2-9b-it google/gemma-2-2b-it \
   --judge-model openai/gpt-oss-20b \
-  --output-dir truthfulqa_experiment/results \
+  --output-dir sycophancy_analysis/results \
   --max-new-tokens 100
 ```
 
