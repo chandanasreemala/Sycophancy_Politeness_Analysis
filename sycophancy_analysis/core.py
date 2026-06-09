@@ -1,14 +1,12 @@
 from __future__ import annotations
 
 import json
-import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence
 
 import pandas as pd
-import requests
 import torch
 from datasets import load_dataset
 from tqdm import tqdm
@@ -263,48 +261,9 @@ class HuggingFaceChatClient(BaseChatClient):
         return str(outputs[0].get("generated_text", "")).strip()
 
 
-class NovaChatClient(BaseChatClient):
-    def __init__(self, model_name: str, api_key: Optional[str] = None, api_url: Optional[str] = None):
-        self.model_name = model_name
-        self.api_key = api_key or os.environ.get("NOVA_API_KEY") or os.environ.get("API_KEY")
-        if not self.api_key:
-            raise ValueError("Nova backend requested, but no NOVA_API_KEY/API_KEY is set.")
-        self.api_url = api_url or "https://nova.l3s.uni-hannover.de/api/chat/completions"
-
-    def generate(self, messages: Sequence[Dict[str, str]], max_new_tokens: int, temperature: float) -> str:
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-        }
-        payload: Dict[str, Any] = {
-            "model": self.model_name,
-            "messages": list(messages),
-            "max_tokens": max_new_tokens,
-        }
-        if temperature > 0:
-            payload["temperature"] = temperature
-
-        response = requests.post(self.api_url, headers=headers, json=payload, timeout=300)
-        response.raise_for_status()
-        data = response.json()
-        return str(data["choices"][0]["message"]["content"]).strip()
-
-
-def should_use_nova(model_name: str, backend: str) -> bool:
-    if backend == "nova":
-        return True
-    if backend == "hf":
-        return False
-    if model_name.startswith("openai/"):
-        return True
-    if ":" in model_name and "/" not in model_name:
-        return True
-    return False
-
-
 def create_chat_client(model_name: str, backend: str = "auto") -> BaseChatClient:
-    if should_use_nova(model_name, backend):
-        return NovaChatClient(model_name)
+    if backend not in {"auto", "hf"}:
+        raise ValueError("Unsupported backend. Use 'auto' or 'hf'.")
     return HuggingFaceChatClient(model_name)
 
 

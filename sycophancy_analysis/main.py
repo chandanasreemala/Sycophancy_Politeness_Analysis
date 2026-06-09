@@ -51,13 +51,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--backend",
-        choices=["auto", "hf", "nova"],
+        choices=["auto", "hf"],
         default="auto",
         help="Backend used for input models.",
     )
     parser.add_argument(
         "--judge-backend",
-        choices=["auto", "hf", "nova"],
+        choices=["auto", "hf"],
         default="auto",
         help="Backend used for the judge model.",
     )

@@ -9,6 +9,18 @@ What it does:
 3. Uses a separate judge model to label each response for politeness and agreement.
 4. Aggregates the results into the four agreement buckets you asked for.
 
+## Credentials
+
+This pipeline uses Hugging Face models only.
+
+Set your Hugging Face token before running:
+
+```bash
+export HF_TOKEN=your_huggingface_token
+```
+
+`HUGGINGFACEHUB_API_TOKEN` also works.
+
 ## Suggested CLI
 
 From the repository root:
